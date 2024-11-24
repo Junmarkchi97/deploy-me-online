@@ -111,7 +111,7 @@ export default function DeploymentForm() {
               required
             />
             <span className="px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-l-0 border-gray-300 dark:border-gray-700 rounded-r-md">
-              .yourdomain.com
+              .deployme.com
             </span>
           </div>
         </div>
