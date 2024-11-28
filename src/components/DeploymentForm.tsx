@@ -11,6 +11,8 @@ export default function DeploymentForm() {
   const [error, setError] = useState<string | null>(null);
   const [deploymentUrl, setDeploymentUrl] = useState<string | null>(null);
 
+  const domain = process.env.NODE_ENV === 'development' ? 'localhost:3000' : 'deployme.online';
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsDeploying(true);
@@ -111,7 +113,7 @@ export default function DeploymentForm() {
               required
             />
             <span className="px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-l-0 border-gray-300 dark:border-gray-700 rounded-r-md">
-              .deployme.online
+              .{domain}
             </span>
           </div>
         </div>

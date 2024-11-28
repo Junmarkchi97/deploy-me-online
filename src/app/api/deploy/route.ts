@@ -83,7 +83,9 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       message: 'Deployment completed',
-      deploymentUrl: `https://${subdomain}.deployme.online`,
+      deploymentUrl: process.env.NODE_ENV === 'development'
+        ? `http://localhost:3000/${subdomain}`
+        : `https://${subdomain}.deployme.online`,
       details: {
         owner,
         repo,
