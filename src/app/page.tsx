@@ -84,7 +84,7 @@ export default async function Home() {
         </main>
 
         <footer className="row-start-3 text-sm text-gray-500 dark:text-gray-400 text-center">
-          Deploy your projects with confidence • Powered by Your Platform
+          Deploy your projects with confidence • Powered by DeployMe
         </footer>
       </div>
     </Providers>

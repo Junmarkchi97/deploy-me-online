@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { Octokit } from '@octokit/rest';
+import { Octokit } from 'octokit';
 import { authOptions } from '../auth/[...nextauth]/route';
+import { deployRepository } from '@/services/deployment';
 
 // Helper function to validate and extract repo info from GitHub URL
 function parseGitHubUrl(url: string) {
@@ -60,7 +61,7 @@ export async function POST(request: Request) {
 
     // Check if repository exists and user has access
     try {
-      await octokit.repos.get({
+      await octokit.rest.repos.get({
         owner,
         repo,
       });
@@ -71,33 +72,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // TODO: Check if subdomain is available in your database
-    // const isSubdomainAvailable = await checkSubdomainAvailability(subdomain);
-    // if (!isSubdomainAvailable) {
-    //   return NextResponse.json(
-    //     { error: 'Subdomain is already taken' },
-    //     { status: 400 }
-    //   );
-    // }
-
-    // Start deployment process
-    // 1. Clone repository
-    // 2. Build static files
-    // 3. Deploy to hosting service
-    // 4. Set up subdomain
-
-    // For now, we'll just queue a deployment job
-    await queueDeployment({
+    // Deploy the repository
+    const deploymentResult = await deployRepository({
       owner,
       repo,
       subdomain,
-      accessToken: session.accessToken,
+      accessToken: session.accessToken!,
     });
 
     return NextResponse.json({
       success: true,
-      message: 'Deployment started',
-      deploymentUrl: `https://${subdomain}.yourdomain.com`,
+      message: 'Deployment completed',
+      deploymentUrl: `https://${subdomain}.deployme.online`,
       details: {
         owner,
         repo,
@@ -108,27 +94,8 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('Deployment error:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to start deployment' },
+      { error: error.message || 'Failed to deploy' },
       { status: error.status || 500 }
     );
   }
-}
-
-// Helper function to queue deployment
-async function queueDeployment(deploymentInfo: {
-  owner: string;
-  repo: string;
-  subdomain: string;
-  accessToken: string;
-}) {
-  // TODO: Implement actual deployment queue
-  // This could be:
-  // 1. A message queue (Redis, RabbitMQ, etc.)
-  // 2. A database record
-  // 3. A serverless function trigger
-
-  console.log('Queuing deployment:', deploymentInfo);
-
-  // For now, we'll just log the deployment info
-  return true;
 }
